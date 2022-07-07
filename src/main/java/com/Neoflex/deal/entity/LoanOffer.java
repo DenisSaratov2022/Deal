@@ -1,12 +1,18 @@
-package com.Neoflex.deal.model;
+package com.Neoflex.deal.entity;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
-public class LoanOfferDTO {
+@Entity
+public class LoanOffer {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    private Long id;
     private Long applicationId;
     private BigDecimal requestedAmount;
     private BigDecimal totalAmount;
@@ -15,4 +21,7 @@ public class LoanOfferDTO {
     private BigDecimal rate;
     private boolean isInsuranceEnabled;
     private boolean isSalaryClient;
+    @OneToOne
+    @JoinColumn(name = "application", nullable = false)
+    private Application application;
 }

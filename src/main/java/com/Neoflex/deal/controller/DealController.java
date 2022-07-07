@@ -1,10 +1,12 @@
 package com.Neoflex.deal.controller;
 
+import com.Neoflex.deal.entity.FinishRegistrationRequestDTO;
 import com.Neoflex.deal.model.LoanApplicationRequestDTO;
 import com.Neoflex.deal.model.LoanOfferDTO;
 import com.Neoflex.deal.service.DealService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,21 +24,21 @@ public class DealController {
     private final DealService dealService;
 
     @PostMapping("/deal/application")
-    public List<LoanOfferDTO> dealApplication(@RequestBody @Valid LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public ResponseEntity<List<LoanOfferDTO>> dealApplication(@RequestBody @Valid LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("dealApplication method started with params: " + loanApplicationRequestDTO.toString());
         return dealService.getOffers(loanApplicationRequestDTO);
     }
 
     @PutMapping("/deal/offer")
-    public void dealOffer(int id, @RequestBody  LoanOfferDTO loanOfferDTO) {
+    public void dealOffer(@RequestBody  LoanOfferDTO loanOfferDTO) {
         log.info("dealOffer method started with params: " + loanOfferDTO.toString());
-        dealService.offerSelection(id, loanOfferDTO);
+        dealService.offerSelection(loanOfferDTO);
     }
 
     @PutMapping(" /deal/calculate/{applicationId}")
-    public void registrationEnd(int id, @RequestBody  LoanOfferDTO loanOfferDTO) {
-        log.info("dealOffer method started with params: " + loanOfferDTO.toString());
-        dealService.offerSelection(id, loanOfferDTO);
+    public void registrationEnd(@RequestBody FinishRegistrationRequestDTO finishRegistrationRequestDTO, Long applicationId) {
+        log.info("dealOffer method started with params: " + finishRegistrationRequestDTO.toString());
+        dealService.completionOfRegistration(finishRegistrationRequestDTO, applicationId);
     }
 
 }
