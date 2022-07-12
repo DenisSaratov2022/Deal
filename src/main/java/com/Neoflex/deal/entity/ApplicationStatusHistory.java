@@ -2,15 +2,15 @@ package com.Neoflex.deal.entity;
 
 import com.Neoflex.deal.model.ChangeType;
 import com.Neoflex.deal.model.Status;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Builder
 public class ApplicationStatusHistory {
 
      @Id

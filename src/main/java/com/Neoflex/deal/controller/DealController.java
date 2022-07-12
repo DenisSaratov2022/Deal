@@ -1,6 +1,6 @@
 package com.Neoflex.deal.controller;
 
-import com.Neoflex.deal.entity.FinishRegistrationRequestDTO;
+import com.Neoflex.deal.model.FinishRegistrationRequestDTO;
 import com.Neoflex.deal.model.LoanApplicationRequestDTO;
 import com.Neoflex.deal.model.LoanOfferDTO;
 import com.Neoflex.deal.service.DealService;
@@ -36,7 +36,7 @@ public class DealController {
     }
 
     @PutMapping(" /deal/calculate/{applicationId}")
-    public void registrationEnd(@RequestBody FinishRegistrationRequestDTO finishRegistrationRequestDTO, Long applicationId) {
+    public void registrationFinish(@RequestBody FinishRegistrationRequestDTO finishRegistrationRequestDTO, Long applicationId) {
         log.info("dealOffer method started with params: " + finishRegistrationRequestDTO.toString());
         dealService.completionOfRegistration(finishRegistrationRequestDTO, applicationId);
     }

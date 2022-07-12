@@ -1,10 +1,12 @@
 package com.Neoflex.deal.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
+@Builder
 @Data
 @Entity
 public class LoanOffer {

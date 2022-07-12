@@ -16,7 +16,8 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-    @OneToOne(mappedBy = "application")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "client", nullable = false)
     private Client client;
     @OneToOne(mappedBy = "application")
     private Credit credit;

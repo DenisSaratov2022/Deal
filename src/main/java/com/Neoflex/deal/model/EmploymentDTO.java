@@ -1,25 +1,17 @@
-package com.Neoflex.deal.entity;
+package com.Neoflex.deal.model;
 
-import com.Neoflex.deal.model.EmploymentStatus;
-import com.Neoflex.deal.model.Position;
+import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-@Entity
+@Builder
 public class EmploymentDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private Long id;
     private EmploymentStatus employmentStatus;
     @NotBlank
     @Size(min = 12, max = 12)
@@ -31,8 +23,5 @@ public class EmploymentDTO {
     private Integer workExperienceTotal;
     @Min(0)
     private Integer workExperienceCurrent;
-    @OneToOne
-    @JoinColumn(name = "finishRegistrationRequestDTO", nullable = false)
-    private FinishRegistrationRequestDTO finishRegistrationRequestDTO;
 
 }

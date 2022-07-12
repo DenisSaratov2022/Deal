@@ -1,6 +1,7 @@
 package com.Neoflex.deal.entity;
 
 import com.Neoflex.deal.model.EmploymentStatus;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
+@Builder
 public class Employment {
 
     @Id

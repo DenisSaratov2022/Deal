@@ -1,8 +1,10 @@
 package com.Neoflex.deal.entity;
 
 import com.Neoflex.deal.model.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,6 +12,8 @@ import java.time.LocalDate;
 @Builder
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Client {
 
     @Id
@@ -24,14 +28,16 @@ public class Client {
     private Gender gender;
     private MaritalStatus maritalStatus;
     private Integer dependentAmount;
-    @OneToOne
-    @JoinColumn(name = "application", nullable = false)
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "application", nullable = false)
+    @OneToOne(mappedBy ="client")
     private Application application;
-    @OneToOne
-    @JoinColumn(name = "passport", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "passport")
+//    @OneToOne(mappedBy ="client", cascade = CascadeType.ALL)
     private Passport passport;
-    @OneToOne
-    @JoinColumn(name = "employment", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employment")
     private Employment employment;
 
 
