@@ -14,19 +14,17 @@ import java.time.LocalDate;
 @Entity
 public class PaymentScheduleElement {
 
-     @Id
-     @GeneratedValue(strategy = GenerationType.AUTO)
-     @Column(name = "id", nullable = false)
-     private Long id;
-     private Integer number;
-     private LocalDate date;
-     private BigDecimal totalPayment;
-     private BigDecimal interestPayment;
-     private BigDecimal debtPayment;
-     private BigDecimal remainingDebt;
-     @ManyToOne(cascade = CascadeType.ALL)
-     @JoinColumn(name = "credit", nullable = false)
-     private Credit credit;
-
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    private Long id;
+    private Integer number;
+    private LocalDate date;
+    private BigDecimal totalPayment;
+    private BigDecimal interestPayment;
+    private BigDecimal debtPayment;
+    private BigDecimal remainingDebt;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "credit")
+    private Credit credit;
 }

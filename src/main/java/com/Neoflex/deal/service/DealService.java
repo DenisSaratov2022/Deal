@@ -6,11 +6,12 @@ import com.Neoflex.deal.model.*;
 import com.Neoflex.deal.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -21,28 +22,39 @@ import java.util.List;
 public class DealService {
     private final ApplicationRepository applicationRepository;
     private final RestTemplate restTemplate;
+    @Value("${url.conveyor.offers}")
+    private String url;
+    @Value("${url.conveyor.calculation}")
+    private String url2;
 
     public ResponseEntity<List<LoanOfferDTO>> getOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
 
+        Passport passport = Passport.builder()
+                .passportNumber(loanApplicationRequestDTO.getPassportNumber())
+                .passportSeries(loanApplicationRequestDTO.getPassportSeries())
+                .build();
         Client client = Client.builder()
                 .lastName(loanApplicationRequestDTO.getLastName())
                 .firstName(loanApplicationRequestDTO.getFirstName())
                 .middleNme(loanApplicationRequestDTO.getMiddleName())
                 .birthDate(loanApplicationRequestDTO.getBirthdate())
                 .email(loanApplicationRequestDTO.getEmail())
+                .passport(passport)
                 .build();
         Application application =
                 Application.builder()
                         .client(client)
+                        .creationDate(LocalDate.now())
                         .build();
         applicationRepository.save(application);
-        LoanOfferDTO[] array = restTemplate.postForObject("http://localhost:8082/conveyor/offers", loanApplicationRequestDTO, LoanOfferDTO[].class);
+        LoanOfferDTO[] array = restTemplate.postForObject(url, loanApplicationRequestDTO, LoanOfferDTO[].class);
         if (array == null) {
             throw new LoanOfferException("Conveyor return null");
         }
         for (LoanOfferDTO loanOfferDTO : array) {
             loanOfferDTO.setApplicationId(application.getId());
         }
+        log.info("getOffers method return: {}", Arrays.asList(array));
         return ResponseEntity.ok(Arrays.asList(array));
     }
 
@@ -65,30 +77,44 @@ public class DealService {
                 .isSalaryClient(loanOfferDTO.isSalaryClient())
                 .isInsuranceEnabled(loanOfferDTO.isInsuranceEnabled())
                 .build();
-        Application.builder()
-                .status(applicationStatusHistory.getStatus())
-                .applicationStatusHistories(applicationStatusHistories)
-                .appliedOffer(loanOffer)
-                .build();
+        application.setStatus(applicationStatusHistory.getStatus());
+        application.setApplicationStatusHistories(applicationStatusHistories);
+        application.setAppliedOffer(loanOffer);
         applicationRepository.save(application);
+        log.info("Method offerSelection init appliedOffer, save application");
     }
 
     public void completionOfRegistration(FinishRegistrationRequestDTO finishRegistrationRequestDTO, Long applicationId) {
         Application application = applicationRepository.findById(applicationId).orElseThrow();
-        EmploymentDTO employment = EmploymentDTO.builder()
+        Employment employment = Employment.builder()
+                .salary(finishRegistrationRequestDTO.getEmployment().getSalary())
+                .employmentStatus(finishRegistrationRequestDTO.getEmployment().getEmploymentStatus())
+                .workExperienceCurrent(finishRegistrationRequestDTO.getEmployment().getWorkExperienceCurrent())
+                .account(finishRegistrationRequestDTO.getAccount())
+                .workExperienceTotal(finishRegistrationRequestDTO.getEmployment().getWorkExperienceTotal())
+                .position(finishRegistrationRequestDTO.getEmployment().getPosition())
+                .build();
+        application.getClient().getPassport().setPassportIssueDate(finishRegistrationRequestDTO.getPassportIssueDate());
+        application.getClient().getPassport().setPassportIssueBranch(finishRegistrationRequestDTO.getPassportIssueBranch());
+        application.getClient().setMaritalStatus(finishRegistrationRequestDTO.getMaritalStatus());
+        application.getClient().setDependentAmount(finishRegistrationRequestDTO.getDependentAmount());
+        application.getClient().setGender(finishRegistrationRequestDTO.getGender());
+        application.getClient().setEmployment(employment);
+        applicationRepository.save(application);
+        EmploymentDTO employmentDTO = EmploymentDTO.builder()
                 .employmentStatus(application.getClient().getEmployment().getEmploymentStatus())
                 .salary(application.getClient().getEmployment().getSalary())
-                .position(finishRegistrationRequestDTO.getEmployment().getPosition())
+                .position(application.getClient().getEmployment().getPosition())
                 .employerINN(finishRegistrationRequestDTO.getEmployment().getEmployerINN())
-                .workExperienceCurrent(finishRegistrationRequestDTO.getEmployment().getWorkExperienceCurrent())
-                .workExperienceTotal(finishRegistrationRequestDTO.getEmployment().getWorkExperienceTotal())
+                .workExperienceCurrent(application.getClient().getEmployment().getWorkExperienceCurrent())
+                .workExperienceTotal(application.getClient().getEmployment().getWorkExperienceTotal())
                 .build();
         ScoringDataDTO scoringDataDTO = ScoringDataDTO.builder()
-                .amount(BigDecimal.valueOf(finishRegistrationRequestDTO.getDependentAmount()))
+                .amount(application.getAppliedOffer().getRequestedAmount())
                 .lastName(application.getClient().getLastName())
                 .firstName(application.getClient().getFirstName())
                 .middleName(application.getClient().getMiddleNme())
-                .gender(finishRegistrationRequestDTO.getGender())
+                .gender(application.getClient().getGender())
                 .birthdate(application.getClient().getBirthDate())
                 .passportSeries(application.getClient().getPassport().getPassportSeries())
                 .passportNumber(application.getClient().getPassport().getPassportNumber())
@@ -96,12 +122,14 @@ public class DealService {
                 .passportIssueDate(application.getClient().getPassport().getPassportIssueDate())
                 .maritalStatus(application.getClient().getMaritalStatus())
                 .dependentAmount(application.getClient().getDependentAmount())
-                .employment(employment)
-                .account(finishRegistrationRequestDTO.getAccount())
-             //   .isInsuranceEnabled()
-               /// .term()
-              //  .isSalaryClient()
+                .employment(employmentDTO)
+                .account(application.getClient().getEmployment().getAccount())
+                .isInsuranceEnabled(application.getAppliedOffer().isInsuranceEnabled())
+                .term(application.getAppliedOffer().getTerm())
+                .isSalaryClient(application.getAppliedOffer().isSalaryClient())
                 .build();
+        restTemplate.postForObject(url2, scoringDataDTO, Void.class);
+        log.info("completionOfRegistration method executed the post request to the microservice conveyor");
     }
 }
 

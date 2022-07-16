@@ -30,14 +30,14 @@ public class DealController {
     }
 
     @PutMapping("/deal/offer")
-    public void dealOffer(@RequestBody  LoanOfferDTO loanOfferDTO) {
+    public void dealOffer(@RequestBody  @Valid LoanOfferDTO loanOfferDTO) {
         log.info("dealOffer method started with params: " + loanOfferDTO.toString());
         dealService.offerSelection(loanOfferDTO);
     }
 
     @PutMapping(" /deal/calculate/{applicationId}")
-    public void registrationFinish(@RequestBody FinishRegistrationRequestDTO finishRegistrationRequestDTO, Long applicationId) {
-        log.info("dealOffer method started with params: " + finishRegistrationRequestDTO.toString());
+    public void registrationFinish(@RequestBody  @Valid FinishRegistrationRequestDTO finishRegistrationRequestDTO, Long applicationId) {
+        log.info("dealCalculate method started with params: " + finishRegistrationRequestDTO.toString());
         dealService.completionOfRegistration(finishRegistrationRequestDTO, applicationId);
     }
 

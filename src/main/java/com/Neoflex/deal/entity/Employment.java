@@ -1,8 +1,11 @@
 package com.Neoflex.deal.entity;
 
 import com.Neoflex.deal.model.EmploymentStatus;
+import com.Neoflex.deal.model.Position;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,6 +13,8 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Employment {
 
     @Id
@@ -21,7 +26,8 @@ public class Employment {
     private BigDecimal salary;
     private Integer workExperienceTotal;
     private Integer workExperienceCurrent;
+    private Position position;
     private String account;
-    @OneToOne(mappedBy = "employment")
+    @OneToOne(mappedBy = "employment", cascade = CascadeType.ALL)
     private Client client;
 }

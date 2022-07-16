@@ -1,4 +1,5 @@
 package com.Neoflex.deal.model;
+
 import com.Neoflex.deal.validation.ChekDateOfBirth;
 import com.Neoflex.deal.validation.ChekPassportIssueDate;
 import lombok.AllArgsConstructor;

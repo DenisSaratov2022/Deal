@@ -1,5 +1,7 @@
 package com.Neoflex.deal.entity;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Passport {
 
     @Id
@@ -21,8 +24,6 @@ public class Passport {
     private LocalDate passportIssueDate;
     private String passportIssueBranch;
     @OneToOne(mappedBy = "passport", cascade = CascadeType.ALL)
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "client", nullable = true)
     private Client client;
 
 }

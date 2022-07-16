@@ -1,6 +1,7 @@
 package com.Neoflex.deal.entity;
 
-import com.Neoflex.deal.model.*;
+import com.Neoflex.deal.model.Gender;
+import com.Neoflex.deal.model.MaritalStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Client {
 
     @Id
@@ -28,17 +30,12 @@ public class Client {
     private Gender gender;
     private MaritalStatus maritalStatus;
     private Integer dependentAmount;
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "application", nullable = false)
-    @OneToOne(mappedBy ="client")
+    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
     private Application application;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "passport")
-//    @OneToOne(mappedBy ="client", cascade = CascadeType.ALL)
     private Passport passport;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employment")
     private Employment employment;
-
-
 }
