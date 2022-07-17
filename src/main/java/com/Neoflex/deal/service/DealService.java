@@ -7,7 +7,6 @@ import com.Neoflex.deal.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,7 +26,7 @@ public class DealService {
     @Value("${url.conveyor.calculation}")
     private String url2;
 
-    public ResponseEntity<List<LoanOfferDTO>> getOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public List<LoanOfferDTO> getOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
 
         Passport passport = Passport.builder()
                 .passportNumber(loanApplicationRequestDTO.getPassportNumber())
@@ -55,7 +54,7 @@ public class DealService {
             loanOfferDTO.setApplicationId(application.getId());
         }
         log.info("getOffers method return: {}", Arrays.asList(array));
-        return ResponseEntity.ok(Arrays.asList(array));
+        return Arrays.asList(array);
     }
 
     public void offerSelection(LoanOfferDTO loanOfferDTO) {

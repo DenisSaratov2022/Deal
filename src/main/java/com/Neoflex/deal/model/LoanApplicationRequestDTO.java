@@ -2,6 +2,7 @@ package com.Neoflex.deal.model;
 
 import com.Neoflex.deal.validation.ChekDateOfBirth;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class LoanApplicationRequestDTO {
 
     @Min(10000)

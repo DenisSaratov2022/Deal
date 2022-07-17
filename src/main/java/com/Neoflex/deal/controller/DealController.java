@@ -26,7 +26,7 @@ public class DealController {
     @PostMapping("/deal/application")
     public ResponseEntity<List<LoanOfferDTO>> dealApplication(@RequestBody @Valid LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("dealApplication method started with params: " + loanApplicationRequestDTO.toString());
-        return dealService.getOffers(loanApplicationRequestDTO);
+        return ResponseEntity.ok(dealService.getOffers(loanApplicationRequestDTO));
     }
 
     @PutMapping("/deal/offer")
