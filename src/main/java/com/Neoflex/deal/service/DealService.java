@@ -22,9 +22,9 @@ public class DealService {
     private final ApplicationRepository applicationRepository;
     private final RestTemplate restTemplate;
     @Value("${url.conveyor.offers}")
-    private String url;
+    private String urlConveyorOffers;
     @Value("${url.conveyor.calculation}")
-    private String url2;
+    private String urlConveyorCalculation;
 
     public List<LoanOfferDTO> getOffers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
 
@@ -46,7 +46,7 @@ public class DealService {
                         .creationDate(LocalDate.now())
                         .build();
         applicationRepository.save(application);
-        LoanOfferDTO[] array = restTemplate.postForObject(url, loanApplicationRequestDTO, LoanOfferDTO[].class);
+        LoanOfferDTO[] array = restTemplate.postForObject(urlConveyorOffers, loanApplicationRequestDTO, LoanOfferDTO[].class);
         if (array == null) {
             throw new LoanOfferException("Conveyor return null");
         }
@@ -127,7 +127,7 @@ public class DealService {
                 .term(application.getAppliedOffer().getTerm())
                 .isSalaryClient(application.getAppliedOffer().isSalaryClient())
                 .build();
-        restTemplate.postForObject(url2, scoringDataDTO, Void.class);
+        restTemplate.postForObject( urlConveyorCalculation, scoringDataDTO, Void.class);
         log.info("completionOfRegistration method executed the post request to the microservice conveyor");
     }
 }
