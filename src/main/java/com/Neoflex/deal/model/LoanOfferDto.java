@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoanOfferDTO {
+public class LoanOfferDto {
 
     @Min(0)
     private Long applicationId;

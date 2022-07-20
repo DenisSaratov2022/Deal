@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Client {
 
     @Id
@@ -27,7 +26,9 @@ public class Client {
     private String middleNme;
     private LocalDate birthDate;
     private String email;
+//    @Enumerated(EnumType.STRING)
     private Gender gender;
+//    @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
     private Integer dependentAmount;
     @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
@@ -38,4 +39,5 @@ public class Client {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employment")
     private Employment employment;
+
 }

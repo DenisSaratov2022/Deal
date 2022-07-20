@@ -1,9 +1,10 @@
 package com.Neoflex.deal.controller;
 
-import com.Neoflex.deal.model.FinishRegistrationRequestDTO;
-import com.Neoflex.deal.model.LoanApplicationRequestDTO;
-import com.Neoflex.deal.model.LoanOfferDTO;
+import com.Neoflex.deal.model.FinishRegistrationRequestDto;
+import com.Neoflex.deal.model.LoanApplicationRequestDto;
+import com.Neoflex.deal.model.LoanOfferDto;
 import com.Neoflex.deal.service.DealService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,25 +21,29 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
+//@Api
 public class DealController {
     private final DealService dealService;
 
+
+    @Operation(summary = "calculation Of PossibleConditions")
     @PostMapping("/deal/application")
-    public ResponseEntity<List<LoanOfferDTO>> dealApplication(@RequestBody @Valid LoanApplicationRequestDTO loanApplicationRequestDTO) {
-        log.info("dealApplication method started with params: " + loanApplicationRequestDTO.toString());
-        return ResponseEntity.ok(dealService.getOffers(loanApplicationRequestDTO));
+    public ResponseEntity<List<LoanOfferDto>> dealApplication(@RequestBody @Valid LoanApplicationRequestDto loanApplicationRequestDto) {
+        log.info("dealApplication method start: request body={}", loanApplicationRequestDto);
+        return ResponseEntity.ok(dealService.getOffers(loanApplicationRequestDto));
     }
 
+    @Operation(summary = "selecting one of the offers")
     @PutMapping("/deal/offer")
-    public void dealOffer(@RequestBody  @Valid LoanOfferDTO loanOfferDTO) {
-        log.info("dealOffer method started with params: " + loanOfferDTO.toString());
-        dealService.offerSelection(loanOfferDTO);
+    public void dealOffer(@RequestBody @Valid LoanOfferDto loanOfferDto) {
+        log.info("dealOffer method start: request body={}", loanOfferDto);
+        dealService.offerSelection(loanOfferDto);
     }
 
-    @PutMapping(" /deal/calculate/{applicationId}")
-    public void registrationFinish(@RequestBody  @Valid FinishRegistrationRequestDTO finishRegistrationRequestDTO, Long applicationId) {
-        log.info("dealCalculate method started with params: " + finishRegistrationRequestDTO.toString());
-        dealService.completionOfRegistration(finishRegistrationRequestDTO, applicationId);
+    @Operation(summary = "completion of registration and full credit calculation")
+    @PutMapping("/deal/calculate/{applicationId}")
+    public void registrationFinish(@RequestBody @Valid FinishRegistrationRequestDto finishRegistrationRequestDto, Long applicationId) {
+        log.info("dealCalculate method start: request body={}, params = {}", finishRegistrationRequestDto, applicationId);
+        dealService.completionOfRegistration(finishRegistrationRequestDto, applicationId);
     }
-
 }

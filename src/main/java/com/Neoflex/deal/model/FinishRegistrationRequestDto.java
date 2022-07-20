@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FinishRegistrationRequestDTO {
+public class FinishRegistrationRequestDto {
 
     private Gender gender;
     private MaritalStatus maritalStatus;
@@ -26,7 +26,7 @@ public class FinishRegistrationRequestDTO {
     @NotBlank
     @Size(min = 5, max = 40)
     private String passportIssueBranch;
-    private EmploymentDTO employment;
+    private EmploymentDto employment;
     @NotBlank
     @Size(min = 2, max = 30)
     private String account;

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmploymentDTO {
+public class EmploymentDto {
 
     private EmploymentStatus employmentStatus;
     @Size(min = 12, max = 12)
