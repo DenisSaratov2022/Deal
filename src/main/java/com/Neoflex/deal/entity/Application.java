@@ -15,7 +15,6 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-//@Table(name = "application")
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,10 +22,9 @@ public class Application {
     private Long id;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client")
- //   @OneToOne(mappedBy = "application", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Client client;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "application")
+    @JoinColumn(name = "credit")
     private Credit credit;
     private Status status;
     private LocalDate creationDate;
